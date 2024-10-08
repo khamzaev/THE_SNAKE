@@ -154,7 +154,7 @@ def main():
 
 if __name__ == '__main__':
     main()
-
+#
 # Метод draw класса Apple
 # def draw(self):
 #     rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
