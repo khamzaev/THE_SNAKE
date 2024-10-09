@@ -1,13 +1,14 @@
 import pytest
 
+import the_snake
 from conftest import StopInfiniteLoop
 
 
 @pytest.mark.timeout(1, method='thread')
 @pytest.mark.usefixtures('modified_clock')
-def test_main_run_without_exceptions(_the_snake):
+def test_main_run_without_exceptions():
     try:
-        _the_snake.main()
+        the_snake.main()
     except StopInfiniteLoop:
         pass
     except Exception as error:
