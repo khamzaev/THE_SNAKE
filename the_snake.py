@@ -96,7 +96,10 @@ class Snake(GameObject):
         """Движение змейки в выбранном направлении."""
         x, y = self.positions[0]
         dx, dy = self.direction
-        new_head = ((x + dx * GRID_SIZE) % SCREEN_WIDTH, (y + dy * GRID_SIZE) % SCREEN_HEIGHT)
+        new_head = (
+            (x + dx * GRID_SIZE) % SCREEN_WIDTH,
+            (y + dy * GRID_SIZE) % SCREEN_HEIGHT
+        )
         self.last = self.positions[-1]
         self.positions = [new_head] + self.positions[:-1]
 
@@ -154,6 +157,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 #
 # Метод draw класса Apple
 # def draw(self):
