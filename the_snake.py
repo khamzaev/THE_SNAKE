@@ -1,5 +1,4 @@
 from random import choice, randint
-
 import pygame
 
 # Константы для размеров поля и сетки:
@@ -14,25 +13,17 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# Цвет фона - черный:
-BOARD_BACKGROUND_COLOR = (0, 0, 0)
-
-# Цвет границы ячейки:
-BORDER_COLOR = (93, 216, 228)
-
-# Цвет яблока:
-APPLE_COLOR = (255, 0, 0)
-
-# Цвет змейки:
-SNAKE_COLOR = (0, 255, 0)
+# Цвета:
+BOARD_BACKGROUND_COLOR = (0, 0, 0)  # Цвет фона - черный
+BORDER_COLOR = (93, 216, 228)  # Цвет границы ячейки
+APPLE_COLOR = (255, 0, 0)  # Цвет яблока
+SNAKE_COLOR = (0, 255, 0)  # Цвет змейки
 
 # Скорость движения змейки:
 SPEED = 20
 
 # Настройка игрового окна:
-screen = pygame.display.set_mode(
-    (SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32
-)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 pygame.display.set_caption('Змейка')
 
 # Настройка времени:
@@ -56,9 +47,9 @@ class Apple(GameObject):
 
     def __init__(self):
         """Инициализация яблока в случайной позиции."""
-        super().__init__(
-            (randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-             randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
+        super().__init__((
+            randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+            randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
         )
 
     def draw(self):
@@ -73,7 +64,10 @@ class Snake(GameObject):
 
     def __init__(self):
         """Инициализация змейки в начальном положении."""
-        start_position = (GRID_WIDTH // 2 * GRID_SIZE, GRID_HEIGHT // 2 * GRID_SIZE)
+        start_position = (
+            GRID_WIDTH // 2 * GRID_SIZE,
+            GRID_HEIGHT // 2 * GRID_SIZE
+        )
         super().__init__(start_position)
         self.positions = [self.position]
         self.direction = choice([UP, DOWN, LEFT, RIGHT])
@@ -89,7 +83,10 @@ class Snake(GameObject):
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
         # Отрисовка головы змейки
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
+        head_rect = pygame.Rect(
+            self.positions[0],
+            (GRID_SIZE, GRID_SIZE)
+        )
         pygame.draw.rect(screen, self.body_color, head_rect)
         pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
 
@@ -152,7 +149,7 @@ def main():
 
         # Проверка на поедание яблока
         if snake.positions[0] == apple.position:
-            snake.positions.append(snake.last)
+            snake.positions.append(snake.last)  # Убедитесь, что вы корректно добавляете новый сегмент
             apple = Apple()
 
         screen.fill(BOARD_BACKGROUND_COLOR)
