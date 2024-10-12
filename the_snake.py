@@ -1,4 +1,5 @@
 from random import choice, randint
+
 import pygame
 
 # Константы для размеров поля и сетки:
@@ -29,7 +30,9 @@ SNAKE_COLOR = (0, 255, 0)
 SPEED = 20
 
 # Настройка игрового окна:
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+screen = pygame.display.set_mode(
+    (SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32
+)
 pygame.display.set_caption('Змейка')
 
 # Настройка времени:
@@ -70,7 +73,8 @@ class Snake(GameObject):
 
     def __init__(self):
         """Инициализация змейки в начальном положении."""
-        super().__init__((GRID_WIDTH // 2 * GRID_SIZE, GRID_HEIGHT // 2 * GRID_SIZE))
+        start_position = (GRID_WIDTH // 2 * GRID_SIZE, GRID_HEIGHT // 2 * GRID_SIZE)
+        super().__init__(start_position)
         self.positions = [self.position]
         self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
