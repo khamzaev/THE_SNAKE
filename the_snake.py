@@ -29,7 +29,7 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс для всех объектов на игровом поле."""
 
-    def __init__(self, position):
+    def __init__(self, position=(0, 0)):
         """Инициализация объекта с заданной позицией.
 
         Args:
@@ -52,6 +52,7 @@ class Apple(GameObject):
     def __init__(self):
         """Инициализация яблока в случайной позиции."""
         self.body_color = APPLE_COLOR  # Добавляем атрибут body_color
+        super().__init__()  # Вызываем конструктор родительского класса
         self.randomize_position()
 
     def randomize_position(self):
@@ -77,7 +78,7 @@ class Snake(GameObject):
         initial_x = GRID_WIDTH // 2 * GRID_SIZE
         initial_y = GRID_HEIGHT // 2 * GRID_SIZE
         initial_position = (initial_x, initial_y)
-        super().__init__(initial_position)
+        super().__init__(initial_position)  # Инициализируем с начальной позицией
 
         self.body_color = SNAKE_COLOR  # Добавляем атрибут body_color
         self.positions = [self.position]
@@ -174,3 +175,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
