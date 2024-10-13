@@ -29,13 +29,14 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс для всех объектов на игровом поле."""
 
-    def __init__(self, position=(0, 0)):
+    def __init__(self, position=(0, 0), body_color=(0, 0, 0)):
         """Инициализация объекта с заданной позицией.
 
         Args:
             position (tuple): Координаты объекта на игровом поле.
         """
         self.position = position
+        self.body_color = body_color
 
     def draw(self):
         """Метод для отрисовки объекта.
@@ -51,8 +52,7 @@ class Apple(GameObject):
 
     def __init__(self):
         """Инициализация яблока в случайной позиции."""
-        self.body_color = APPLE_COLOR
-        super().__init__()
+        super().__init__(body_color=APPLE_COLOR)
         self.randomize_position()
 
     def randomize_position(self):
@@ -78,9 +78,8 @@ class Snake(GameObject):
         initial_x = GRID_WIDTH // 2 * GRID_SIZE
         initial_y = GRID_HEIGHT // 2 * GRID_SIZE
         initial_position = (initial_x, initial_y)
-        super().__init__(initial_position)
+        super().__init__(initial_position, body_color=SNAKE_COLOR)
 
-        self.body_color = SNAKE_COLOR
         self.positions = [self.position]
         self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
