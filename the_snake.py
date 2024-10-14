@@ -1,6 +1,7 @@
 from random import choice, randint
 import pygame
 
+# Константы
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 GRID_SIZE = 20
@@ -19,9 +20,12 @@ SNAKE_COLOR = (0, 255, 0)
 
 SPEED = 20
 
+CENTER_X = SCREEN_WIDTH // 2
+CENTER_Y = SCREEN_HEIGHT // 2
+
 screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(screen_size)
-pygame.display.set_caption('Змейка')
+pygame.display.set_caption(f'Змейка | Скорость: {SPEED} | Управление: стрелки')
 
 clock = pygame.time.Clock()
 
@@ -37,6 +41,20 @@ class GameObject:
         """
         self.position = position
         self.body_color = body_color
+
+    def draw_cell(screen, color, border_color, position, size):
+        """Отрисовывает клетку на экране.
+
+        Args:
+            screen (Surface): Экран, на котором рисуется объект.
+            color (tuple): Цвет заливки объекта.
+            border_color (tuple): Цвет границы объекта.
+            position (tuple): Позиция клетки.
+            size (tuple): Размер клетки.
+        """
+        rect = pygame.Rect(position, size)
+        pygame.draw.rect(screen, color, rect)
+        pygame.draw.rect(screen, border_color, rect, 1)
 
     def draw(self):
         """Метод для отрисовки объекта.
@@ -64,10 +82,10 @@ class Apple(GameObject):
 
     def draw(self):
         """Отрисовка яблока на экране."""
-        rect_size = (GRID_SIZE, GRID_SIZE)
-        rect = pygame.Rect(self.position, rect_size)
-        pygame.draw.rect(screen, self.body_color, rect)
-        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+        GameObject.draw_cell(
+            screen, self.body_color, BORDER_COLOR,
+            self.position, (GRID_SIZE, GRID_SIZE)
+        )
 
 
 class Snake(GameObject):
@@ -75,39 +93,30 @@ class Snake(GameObject):
 
     def __init__(self):
         """Инициализация змейки в центре игрового поля."""
-        initial_x = GRID_WIDTH // 2 * GRID_SIZE
-        initial_y = GRID_HEIGHT // 2 * GRID_SIZE
-        initial_position = (initial_x, initial_y)
-        super().__init__(initial_position, body_color=SNAKE_COLOR)
+        super().__init__(body_color=SNAKE_COLOR)
+        self.reset()  # Вызываем метод reset для инициализации
 
+    def reset(self):
+        """Сбрасывает состояние змейки к начальному."""
+        self.position = (CENTER_X, CENTER_Y)
         self.positions = [self.position]
         self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
         self.last_segment = None
 
-    def get_head_position(self):
-        """Возвращает текущую позицию головы змейки."""
-        return self.positions[0]
-
-    def reset(self):
-        """Сбрасывает состояние змейки к начальному."""
-        self.positions = [self.position]
-        self.direction = choice([UP, DOWN, LEFT, RIGHT])
-
     def draw(self):
         """Отрисовка змейки на экране."""
+        # Отрисовываем все сегменты змейки
         for position in self.positions[:-1]:
-            rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
-            pygame.draw.rect(screen, self.body_color, rect)
-            pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+            self.draw_cell(screen, self.body_color, BORDER_COLOR, position, (GRID_SIZE, GRID_SIZE))
 
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, head_rect)
-        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
+        # Отрисовываем голову змейки
+        self.draw_cell(screen, self.body_color, BORDER_COLOR, self.positions[0], (GRID_SIZE, GRID_SIZE))
 
+        # Убираем последний сегмент, если он был удален
         if self.last_segment:
-            last_rect = pygame.Rect(self.last_segment, (GRID_SIZE, GRID_SIZE))
-            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
+            self.draw_cell(screen, BOARD_BACKGROUND_COLOR, BOARD_BACKGROUND_COLOR, self.last_segment,
+                           (GRID_SIZE, GRID_SIZE))
 
     def move(self):
         """Движение змейки в заданном направлении."""
