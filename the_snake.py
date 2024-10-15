@@ -108,15 +108,23 @@ class Snake(GameObject):
         """Отрисовка змейки на экране."""
         # Отрисовываем все сегменты змейки
         for position in self.positions[:-1]:
-            self.draw_cell(screen, self.body_color, BORDER_COLOR, position, (GRID_SIZE, GRID_SIZE))
+            GameObject.draw_cell(
+                screen, self.body_color, BORDER_COLOR, position,
+                (GRID_SIZE, GRID_SIZE)
+            )
 
         # Отрисовываем голову змейки
-        self.draw_cell(screen, self.body_color, BORDER_COLOR, self.positions[0], (GRID_SIZE, GRID_SIZE))
+        GameObject.draw_cell(
+            screen, self.body_color, BORDER_COLOR,
+            self.positions[0], (GRID_SIZE, GRID_SIZE)
+        )
 
         # Убираем последний сегмент, если он был удален
         if self.last_segment:
-            self.draw_cell(screen, BOARD_BACKGROUND_COLOR, BOARD_BACKGROUND_COLOR, self.last_segment,
-                           (GRID_SIZE, GRID_SIZE))
+            GameObject.draw_cell(
+                screen, BOARD_BACKGROUND_COLOR, BOARD_BACKGROUND_COLOR,
+                self.last_segment, (GRID_SIZE, GRID_SIZE)
+            )
 
     def move(self):
         """Движение змейки в заданном направлении."""
