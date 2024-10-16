@@ -44,9 +44,12 @@ controls_info = "Управление: Стрелки (↑ ↓ ← →)"
 
 
 class GameObject:
-    """Базовый класс для всех объектов на игровом поле."""
-
-    def __init__(self, position=DEFAULT_POSITION, body_color=DEFAULT_BODY_COLOR):
+    """Базовый класс для всех объектов на игровом поле.
+    """
+    def __init__(
+            self, position=DEFAULT_POSITION,
+            body_color=DEFAULT_BODY_COLOR
+    ):
         """Инициализация объекта с заданной позицией.
 
         Args:
@@ -77,15 +80,14 @@ class GameObject:
 
 class Apple(GameObject):
     """Класс для создания и отображения яблока."""
-
     def __init__(self):
         """Инициализация яблока в случайной позиции."""
         super().__init__(body_color=APPLE_COLOR)
         self.randomize_position([])
 
     def randomize_position(self, occupied_positions):
-        """Случайным образом задает позицию яблока,
-        избегая занятых позиций."""
+        """Случайным образом задает позицию яблока,избегая занятых позиций.
+        """
         while True:
             self.position = (
                 randint(0, GRID_WIDTH - 1) * GRID_SIZE,
@@ -102,11 +104,9 @@ class Apple(GameObject):
 
 class Snake(GameObject):
     """Класс для управления змейкой."""
-
     def __init__(self):
         """Инициализация змейки в центре игрового поля."""
         super().__init__(body_color=SNAKE_COLOR)
-
         self.direction = None
         self.next_direction = None
         self.last_segment = None
@@ -115,6 +115,7 @@ class Snake(GameObject):
         self.reset()
 
     def reset(self):
+        """Сбрасывает состояние змейки к начальному."""
         self.position = (CENTER_X, CENTER_Y)
         self.positions = [self.position]
 
@@ -128,7 +129,6 @@ class Snake(GameObject):
 
     def draw(self):
         """Отрисовка змейки на экране."""
-
         head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, head_rect)
         pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
@@ -203,7 +203,8 @@ def main():
             snake.reset()
 
         pygame.display.set_caption(
-            f'Змейка | Скорость: {current_speed} | Счет: {score} | {controls_info}'
+            f'Змейка | Скорость:'
+            f' {current_speed} | Счет: {score} | {controls_info}'
         )
 
         screen.fill(BOARD_BACKGROUND_COLOR)
