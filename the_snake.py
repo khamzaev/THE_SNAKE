@@ -44,8 +44,8 @@ controls_info = "Управление: Стрелки (↑ ↓ ← →)"
 
 
 class GameObject:
-    """Базовый класс для всех объектов на игровом поле.
-    """
+    """Базовый класс для всех объектов на игровом поле."""
+
     def __init__(
             self, position=DEFAULT_POSITION,
             body_color=DEFAULT_BODY_COLOR
@@ -80,14 +80,14 @@ class GameObject:
 
 class Apple(GameObject):
     """Класс для создания и отображения яблока."""
+
     def __init__(self):
         """Инициализация яблока в случайной позиции."""
         super().__init__(body_color=APPLE_COLOR)
         self.randomize_position([])
 
     def randomize_position(self, occupied_positions):
-        """Случайным образом задает позицию яблока,избегая занятых позиций.
-        """
+        """Случайным образом задает позицию яблока"""
         while True:
             self.position = (
                 randint(0, GRID_WIDTH - 1) * GRID_SIZE,
@@ -104,6 +104,7 @@ class Apple(GameObject):
 
 class Snake(GameObject):
     """Класс для управления змейкой."""
+
     def __init__(self):
         """Инициализация змейки в центре игрового поля."""
         super().__init__(body_color=SNAKE_COLOR)
