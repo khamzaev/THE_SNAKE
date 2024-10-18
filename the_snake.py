@@ -86,9 +86,7 @@ class Apple(GameObject):
     def __init__(self, occupied_positions=None):
         """Инициализация яблока в случайной позиции."""
         super().__init__(body_color=APPLE_COLOR)
-        if occupied_positions is None:
-            occupied_positions = []
-        self.randomize_position(occupied_positions)
+        self.randomize_position(occupied_positions or [])
 
     def randomize_position(self, occupied_positions):
         """Случайным образом задает позицию яблока"""
@@ -112,18 +110,21 @@ class Snake(GameObject):
     def __init__(self):
         """Инициализация змейки в центре игрового поля."""
         super().__init__(body_color=SNAKE_COLOR)
-        # Инициализация атрибутов
+        self.position = None
         self.positions = []
-        self.direction = choice([UP, DOWN, LEFT, RIGHT])
+        self.direction = None
         self.next_direction = None
         self.last_segment = None
-
         self.reset()
 
     def reset(self):
         """Сбрасывает состояние змейки к начальному."""
+        # Инициализация атрибутов
         self.position = CENTER_POSITION
         self.positions = [self.position]
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
+        self.next_direction = None
+        self.last_segment = None
 
     def get_head_position(self):
         """Возвращает текущую позицию головы змейки."""
@@ -132,10 +133,21 @@ class Snake(GameObject):
     def draw(self):
         """Отрисовка змейки на экране."""
         # Отрисовка головы змейки с использованием метода
-        # get_head_position()
         self.draw_cell(self.get_head_position(), GRID_SIZE)
-        for position in self.positions[1:]:
-            self.draw_cell(position, GRID_SIZE)
+
+        if len(self.positions) > 1:
+            # Получаем позицию хвоста
+            tail_position = self.positions[-1]
+            self.erase_cell(tail_position, GRID_SIZE)
+
+    @staticmethod
+    def erase_cell(position, size):
+        """Стирает клетку на экране, отрисовывая её цветом фона."""
+        background_color = (0, 0, 0)
+        pygame.draw.rect(
+            screen, background_color,
+            (position[0], position[1], size, size)
+        )
 
     def move(self):
         """Движение змейки в заданном направлении."""
@@ -188,6 +200,7 @@ def main():
 
     while True:
         clock.tick(SPEED)
+        screen.fill((0, 0, 0))
         handle_keys(snake)
         snake.update_direction()
         snake.move()
