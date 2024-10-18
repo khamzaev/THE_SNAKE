@@ -110,14 +110,11 @@ class Snake(GameObject):
     def __init__(self):
         """Инициализация змейки в центре игрового поля."""
         super().__init__(body_color=SNAKE_COLOR)
-        # Инициализируем атрибуты в конструкторе,
-        # даже если позже их обновим через reset()
-        # если их здесь удалить выходит ошибка
-        # "Instance attribute direction defined outside __init__"
-        self.direction = None
+        # Инициализация атрибутов
+        self.positions = []
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
         self.last_segment = None
-        self.positions = []
 
         self.reset()
 
@@ -125,10 +122,6 @@ class Snake(GameObject):
         """Сбрасывает состояние змейки к начальному."""
         self.position = CENTER_POSITION
         self.positions = [self.position]
-
-        self.direction = choice([UP, DOWN, LEFT, RIGHT])
-        self.next_direction = None
-        self.last_segment = None
 
     def get_head_position(self):
         """Возвращает текущую позицию головы змейки."""
@@ -138,17 +131,9 @@ class Snake(GameObject):
         """Отрисовка змейки на экране."""
         # Отрисовка головы змейки с использованием метода
         # get_head_position()
-        head_position = self.get_head_position()
-        self.draw_cell(head_position, GRID_SIZE)
-
-        # Отрисовка всех остальных сегментов тела змейки
+        self.draw_cell(self.get_head_position(), GRID_SIZE)
         for position in self.positions[1:]:
             self.draw_cell(position, GRID_SIZE)
-
-        # Если есть сегмент, который был удален
-        # при движении, закрашиваем его
-        if self.last_segment:
-            self.draw_cell(self.last_segment, GRID_SIZE)
 
     def move(self):
         """Движение змейки в заданном направлении."""
@@ -160,8 +145,8 @@ class Snake(GameObject):
         )
 
         self.last_segment = self.positions[-1]
-        self.positions = self.positions[:-1]
         self.positions.insert(0, new_head)
+        self.positions.pop()
 
     def update_direction(self):
         """Обновление направления движения змейки."""
