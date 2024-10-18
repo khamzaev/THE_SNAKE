@@ -83,7 +83,7 @@ class GameObject:
 class Apple(GameObject):
     """Класс для создания и отображения яблока."""
 
-    def __init__(self, occupied_positions):
+    def __init__(self, occupied_positions=None):
         """Инициализация яблока в случайной позиции."""
         super().__init__(body_color=APPLE_COLOR)
         if occupied_positions is None:
