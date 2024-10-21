@@ -58,15 +58,19 @@ class GameObject:
         self.position = position
         self.body_color = body_color
 
-    def draw_cell(self, position, size,):
+    def draw_cell(self, position, size, color=None):
         """Отрисовка клетки на экране.
 
         Args:
             position (tuple): Позиция клетки на экране.
             size (int): Размер клетки.
+            color (tuple, optional): Цвет клетки. Если не задан, используется цвет объекта.
         """
+        if color is None:
+            color = self.body_color
+
         rect = pygame.Rect(position, (size, size))
-        pygame.draw.rect(screen, self.body_color, rect)
+        pygame.draw.rect(screen, color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
     def draw(self):
@@ -124,8 +128,18 @@ class Snake(GameObject):
 
     def draw(self):
         """Отрисовка змейки на экране."""
+        self.draw_cell(self.positions[0], GRID_SIZE)
+
+        # Затираем хвост (если он есть)
+        if hasattr(self, 'tail_position'):
+            rect = pygame.Rect(self.tail_position, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, rect)
+
+    def clear(self):
+        """Очистка всех сегментов змейки с экрана."""
         for segment in self.positions:
-            self.draw_cell(segment, GRID_SIZE)
+            rect = pygame.Rect(segment, (GRID_SIZE, GRID_SIZE))
+            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, rect)
 
     def move(self):
         """Движение змейки в заданном направлении."""
@@ -137,8 +151,9 @@ class Snake(GameObject):
         )
 
         self.positions.insert(0, new_head)
+
         if len(self.positions) > 1:
-            self.positions.pop()
+            self.tail_position = self.positions.pop()
 
     def update_direction(self):
         """Обновление направления движения змейки."""
@@ -192,11 +207,16 @@ def main():
         # Проверка на столкновение с яблоком
         if snake.get_head_position() == apple.position:
             score += 1
-            snake.positions.append(snake.positions[-1])
+            # Получаем последнюю позицию хвоста
+            tail_x, tail_y = snake.positions[-1]
+            # Добавляем новый сегмент за хвостом в том же направлении, что и движение змеи
+            new_segment = (tail_x, tail_y)
+            # Добавляем новый сегмент в конец списка
+            snake.positions.append(new_segment)
             apple.randomize_position(snake.positions)
-
         # Проверка на самокус
         elif snake.get_head_position() in snake.positions[1:]:
+            snake.clear()
             snake.reset()
 
         pygame.display.set_caption(
@@ -205,7 +225,6 @@ def main():
         )
 
         # Обновление экрана
-        screen.fill(BOARD_BACKGROUND_COLOR)
         apple.draw()
         snake.draw()
         pygame.display.update()
