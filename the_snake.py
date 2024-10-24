@@ -64,7 +64,8 @@ class GameObject:
         Args:
             position (tuple): Позиция клетки на экране.
             size (int): Размер клетки.
-            color (tuple, optional): Цвет клетки. Если не задан, используется цвет объекта.
+            color (tuple, optional): Цвет клетки. Если не задан,
+             используется цвет объекта.
         """
         if color is None:
             color = self.body_color
@@ -209,7 +210,8 @@ def main():
             score += 1
             # Получаем последнюю позицию хвоста
             tail_x, tail_y = snake.positions[-1]
-            # Добавляем новый сегмент за хвостом в том же направлении, что и движение змеи
+            # Добавляем новый сегмент за хвостом
+            # в том же направлении, что и движение змеи
             new_segment = (tail_x, tail_y)
             # Добавляем новый сегмент в конец списка
             snake.positions.append(new_segment)
