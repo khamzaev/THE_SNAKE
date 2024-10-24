@@ -218,6 +218,7 @@ def main():
         elif snake.get_head_position() in snake.positions[1:]:
             snake.clear()
             snake.reset()
+            score = 0
 
         pygame.display.set_caption(
             f'Змейка | Скорость:'
