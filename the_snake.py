@@ -133,6 +133,7 @@ class Snake(GameObject):
         # Отрисовка головы
         self.draw_cell(self.get_head_position(), GRID_SIZE)
 
+        # Отрисовка тела
         for pos in self.positions[1:]:
             self.draw_cell(pos, GRID_SIZE)
 
