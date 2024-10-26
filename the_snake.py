@@ -117,25 +117,26 @@ class Snake(GameObject):
     def reset(self):
         """Сбрасывает состояние змейки к начальному."""
         # Инициализация атрибутов
+        self.length = 1
         self.position = CENTER_POSITION
         self.positions = [self.position]
         self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
-        self.tail_position = None
+        self.last_segment = None
 
     def get_head_position(self):
         """Возвращает текущую позицию головы змейки."""
         return self.positions[0]
 
     def draw(self):
-        """Отрисовка змейки на экране."""
-        self.draw_cell(self.positions[0], GRID_SIZE)
+        """Отрисовка головы и затирание хвоста змейки на экране."""
+        # Отрисовка головы
+        self.draw_cell(self.get_head_position(), GRID_SIZE)
 
-        # Отрисовываем тело змейки, кроме хвоста
-        for segment in self.positions[1:]:
-            self.draw_cell(segment, GRID_SIZE)
+        for pos in self.positions[1:]:
+            self.draw_cell(pos, GRID_SIZE)
 
-    def move(self, apple_position):
+    def move(self):
         """Движение змейки в заданном направлении."""
         head_x, head_y = self.get_head_position()
         delta_x, delta_y = self.direction
@@ -146,11 +147,10 @@ class Snake(GameObject):
 
         self.positions.insert(0, new_head)
 
-        if new_head == apple_position:
-            return True
-
-        self.positions.pop()
-        return False
+        if len(self.positions) > self.length:
+            self.last_segment = self.positions.pop()
+        else:
+            self.last_segment = None
 
     def update_direction(self):
         """Обновление направления движения змейки."""
@@ -194,29 +194,27 @@ def main():
 
     while True:
         clock.tick(SPEED)
-
         screen.fill(BOARD_BACKGROUND_COLOR)
-
         handle_keys(snake)
         snake.update_direction()
 
-        apple_eaten = snake.move(apple.position)
+        apple_eaten = snake.get_head_position() == apple.position
+        snake.move()
 
-        if snake.get_head_position() in snake.positions[1:]:
-            snake.reset()
-            score = 0
-
-            # Если яблоко съедено, обновляем счёт и позицию яблока
         if apple_eaten:
             score += 1
+            snake.length += 1
             apple.randomize_position(snake.positions)
+
+        elif snake.get_head_position() in snake.positions[1:]:
+            snake.reset()
+            score = 0
 
         pygame.display.set_caption(
             f'Змейка | Скорость:'
             f' {SPEED} | Счет: {score} | {CONTROLS_INFO}'
         )
 
-        # Обновление экрана
         apple.draw()
         snake.draw()
         pygame.display.update()
