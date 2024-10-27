@@ -122,20 +122,15 @@ class Snake(GameObject):
         self.positions = [self.position]
         self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
-        self.last_segment = None
 
     def get_head_position(self):
         """Возвращает текущую позицию головы змейки."""
         return self.positions[0]
 
     def draw(self):
-        """Отрисовка головы и затирание хвоста змейки на экране."""
-        # Отрисовка головы
-        self.draw_cell(self.get_head_position(), GRID_SIZE)
-
-        # Отрисовка тела
-        for pos in self.positions[1:]:
-            self.draw_cell(pos, GRID_SIZE)
+        """Отрисовка только головы змейки на экране."""
+        head_position = self.get_head_position()
+        self.draw_cell(head_position, GRID_SIZE)
 
     def move(self):
         """Движение змейки в заданном направлении."""
@@ -149,9 +144,7 @@ class Snake(GameObject):
         self.positions.insert(0, new_head)
 
         if len(self.positions) > self.length:
-            self.last_segment = self.positions.pop()
-        else:
-            self.last_segment = None
+            self.positions.pop()
 
     def update_direction(self):
         """Обновление направления движения змейки."""
@@ -185,7 +178,6 @@ def handle_keys(snake):
 def main():
     """Главная функция игры. Управляет основным игровым циклом."""
     pygame.init()
-
     score = 0
     snake = Snake()
     apple = Apple(snake.positions)
@@ -195,7 +187,6 @@ def main():
 
     while True:
         clock.tick(SPEED)
-        screen.fill(BOARD_BACKGROUND_COLOR)
         handle_keys(snake)
         snake.update_direction()
 
@@ -207,6 +198,7 @@ def main():
         snake.move()
 
         if snake.get_head_position() in snake.positions[1:]:
+            screen.fill(BOARD_BACKGROUND_COLOR)
             snake.reset()
             score = 0
 
