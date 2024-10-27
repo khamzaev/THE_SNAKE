@@ -199,15 +199,14 @@ def main():
         handle_keys(snake)
         snake.update_direction()
 
-        apple_eaten = snake.get_head_position() == apple.position
-        snake.move()
-
-        if apple_eaten:
+        if snake.get_head_position() == apple.position:
             score += 1
             snake.length += 1
             apple.randomize_position(snake.positions)
 
-        elif snake.get_head_position() in snake.positions[1:]:
+        snake.move()
+
+        if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             score = 0
 
