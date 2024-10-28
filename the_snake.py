@@ -60,7 +60,6 @@ class GameObject:
 
     def draw_cell(self, position, size, color=None, draw_border=True):
         """Отрисовка клетки на экране.
-
         Args:
             position (tuple): Позиция клетки на экране.
             size (int): Размер клетки.
@@ -79,7 +78,6 @@ class GameObject:
 
     def draw(self):
         """Метод для отрисовки объекта.
-
         Raises:
             NotImplementedError: Если метод не переопределен в дочернем классе.
         """
@@ -143,7 +141,6 @@ class Snake(GameObject):
                 BOARD_BACKGROUND_COLOR, draw_border=False
             )
 
-
     def move(self):
         """Движение змейки в заданном направлении."""
         head_x, head_y = self.get_head_position()
@@ -168,9 +165,9 @@ class Snake(GameObject):
             self.direction = self.next_direction
             self.next_direction = None
 
+
 def handle_keys(snake):
     """Обработка нажатий клавиш для управления змейкой.
-
     Args:
         snake (Snake): Экземпляр класса змейки.
     """
@@ -211,14 +208,13 @@ def main():
             snake.length += 1
             apple.randomize_position(snake.positions)
 
-
         elif snake.get_head_position() in snake.positions[1:]:
             screen.fill(BOARD_BACKGROUND_COLOR)
             snake.reset()
             score = 0
 
         pygame.display.set_caption(
-            f'Змейка | Скорость:'
+            f'Змейка | Скорость: '
             f' {SPEED} | Счет: {score} | {CONTROLS_INFO}'
         )
 
