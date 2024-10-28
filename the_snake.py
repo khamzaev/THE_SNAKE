@@ -58,7 +58,7 @@ class GameObject:
         self.position = position
         self.body_color = body_color
 
-    def draw_cell(self, position, size, color=None,  draw_border=True):
+    def draw_cell(self, position, size, color=None, draw_border=True):
         """Отрисовка клетки на экране.
 
         Args:
@@ -66,6 +66,8 @@ class GameObject:
             size (int): Размер клетки.
             color (tuple, optional): Цвет клетки. Если не задан,
              используется цвет объекта.
+            draw_border (bool, optional): Флаг для рисования границы клетки.
+            Если True, рисует границу вокруг клетки.
         """
         color = color if color is not None else self.body_color
 
@@ -136,7 +138,10 @@ class Snake(GameObject):
         self.draw_cell(head_position, GRID_SIZE)
 
         if self.last:
-            self.draw_cell(self.last, GRID_SIZE, BOARD_BACKGROUND_COLOR, draw_border=False)
+            self.draw_cell(
+                self.last, GRID_SIZE,
+                BOARD_BACKGROUND_COLOR, draw_border=False
+            )
 
 
     def move(self):
@@ -148,19 +153,20 @@ class Snake(GameObject):
             (head_y + delta_y * GRID_SIZE) % SCREEN_HEIGHT
         )
 
-        self.last = self.positions[-1] if self.positions else None
-
         self.positions.insert(0, new_head)
 
         if len(self.positions) > self.length:
-            self.positions.pop()
+            # Устанавливаем позицию хвоста для затирания
+            self.last = self.positions.pop()
+        else:
+            # Если длина увеличилась, хвост не затираем
+            self.last = None
 
     def update_direction(self):
         """Обновление направления движения змейки."""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
-
 
 def handle_keys(snake):
     """Обработка нажатий клавиш для управления змейкой.
